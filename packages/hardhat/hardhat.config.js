@@ -22,7 +22,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "bnbTestnet";
 
 function mnemonic() {
   try {
@@ -246,6 +246,20 @@ module.exports = {
         mnemonic: mnemonic(),
       },
     },
+    bnbMainnet: {
+      url: "https://bsc-dataseed.binance.org/",
+        chainId: 56,
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
+    bnbTestnet: {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      chainId: 97,
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
     devnetArbitrum: {
       url: "https://nitro-devnet.arbitrum.io/rpc",
       chainId: 421612,
@@ -257,7 +271,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.8.4",
+        version: "0.8.16",
         settings: {
           optimizer: {
             enabled: true,

@@ -16,7 +16,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const chainId = await getChainId();
-
+  let treasuryWalllet= "0xc627Cbc4027E1B2C392Cd4FD204dbD55483561f2";
+  let teamWallet ="0xb6A2f9b8fd10E7AfBac15b3DB96828B018A909d7"
   await deploy("YourContract", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
@@ -25,8 +26,17 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     waitConfirmations: 5,
   });
 
+  await deploy("Bank", {
+    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+    from: deployer,
+    args: [ treasuryWalllet,teamWallet ],
+    log: true,
+    waitConfirmations: 5,
+  });
   // Getting a previously deployed contract
   const YourContract = await ethers.getContract("YourContract", deployer);
+  const Bank = await ethers.getContract("Bank", deployer);
+
   /*  await YourContract.setPurpose("Hello");
   
     // To take ownership of yourContract using the ownable library uncomment next line and add the 
