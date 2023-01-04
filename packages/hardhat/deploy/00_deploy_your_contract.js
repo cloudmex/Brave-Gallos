@@ -18,14 +18,23 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const chainId = await getChainId();
   let treasuryWalllet= "0xc627Cbc4027E1B2C392Cd4FD204dbD55483561f2";
   let teamWallet ="0xb6A2f9b8fd10E7AfBac15b3DB96828B018A909d7"
-  await deploy("YourContract", {
+  let CHAINLINKCOORDINATORADDRESS="0x6a2aad07396b36fe02a22b33cf443582f682c82f"
+  let LINK_ETH_FEEDADDRESS="0xdc530d9457755926550b59e8eccdae7624181557"
+  // await deploy("YourContract", {
+  //   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+  //   from: deployer,
+  //   // args: [ "Hello", ethers.utils.parseEther("1.5") ],
+  //   log: true,
+  //   waitConfirmations: 5,
+  // });
+
+  await deploy("BraveGallosToken", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
-    // args: [ "Hello", ethers.utils.parseEther("1.5") ],
+    //args: [ "BraveGallosToken" ],
     log: true,
     waitConfirmations: 5,
   });
-
   await deploy("Bank", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
@@ -33,10 +42,31 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     log: true,
     waitConfirmations: 5,
   });
-  // Getting a previously deployed contract
-  const YourContract = await ethers.getContract("YourContract", deployer);
-  const Bank = await ethers.getContract("Bank", deployer);
 
+  
+  // Getting a previously deployed contract
+ // const YourContract = await ethers.getContract("YourContract", deployer);
+  const Bank = await ethers.getContract("Bank", deployer);
+  const BGToken = await ethers.getContract("BraveGallosToken", deployer);
+ 
+
+  //Listing our ERC20 at the bank
+  //await Bank.addToken(BGToken.address);
+
+  console.log(Bank.address)
+ // Deploy cointoss
+  await deploy("CoinToss", {
+    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+    from: deployer,
+    args: [Bank.address,CHAINLINKCOORDINATORADDRESS,LINK_ETH_FEEDADDRESS],
+    log: true,
+    waitConfirmations: 5,
+  });
+
+  const Coin = await ethers.getContract("CoinToss", deployer);
+
+  
+   console.log(await Coin.bank());
   /*  await YourContract.setPurpose("Hello");
   
     // To take ownership of yourContract using the ownable library uncomment next line and add the 

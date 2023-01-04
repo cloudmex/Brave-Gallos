@@ -151,6 +151,7 @@ function App(props) {
 
   const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
 
+  console.log("🪲 ~ file: App.jsx:154 ~ App ~ contractConfig", contractConfig);
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
 
@@ -309,7 +310,16 @@ function App(props) {
           <Link to="/">App Homea</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
-          <Link to="/debug">Debug Contracts</Link>
+          <Link to="/debug">Debug Test Contracts</Link>
+        </Menu.Item>
+        <Menu.Item key="/cointoss">
+          <Link to="/cointoss">Debug Cointoss Contract</Link>
+        </Menu.Item>
+        <Menu.Item key="/bank">
+          <Link to="/bank">Debug Bank Contract</Link>
+        </Menu.Item>
+        <Menu.Item key="/braveToken">
+          <Link to="/braveToken">Debug BG Token Contract</Link>
         </Menu.Item>
         <Menu.Item key="/hints">
           <Link to="/hints">Hints</Link>
@@ -339,6 +349,58 @@ function App(props) {
 
           <Contract
             name="YourContract"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+        </Route>
+
+        <Route exact path="/cointoss">
+          {/*
+                🎛 this scaffolding is full of commonly used components
+                this <Contract/> component will automatically parse your ABI
+                and give you a form to interact with it locally
+            */}
+
+          <Contract
+            name="CoinToss"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+        </Route>
+        <Route exact path="/bank">
+          {/*
+                🎛 this scaffolding is full of commonly used components
+                this <Contract/> component will automatically parse your ABI
+                and give you a form to interact with it locally
+            */}
+
+          <Contract
+            name="Bank"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+        </Route>
+        <Route exact path="/braveToken">
+          {/*
+                🎛 this scaffolding is full of commonly used components
+                this <Contract/> component will automatically parse your ABI
+                and give you a form to interact with it locally
+            */}
+
+          <Contract
+            name="BraveGallosToken"
             price={price}
             signer={userSigner}
             provider={localProvider}
