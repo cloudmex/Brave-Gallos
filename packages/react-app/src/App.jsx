@@ -151,7 +151,7 @@ function App(props) {
 
   const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
 
-  console.log("🪲 ~ file: App.jsx:154 ~ App ~ contractConfig", contractConfig);
+  //console.log("🪲 ~ file: App.jsx:154 ~ App ~ contractConfig", contractConfig);
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
 
@@ -200,17 +200,18 @@ function App(props) {
       writeContracts &&
       mainnetContracts
     ) {
-      console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
-      console.log("🌎 mainnetProvider", mainnetProvider);
-      console.log("🏠 localChainId", localChainId);
-      console.log("👩‍💼 selected address:", address);
-      console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
-      console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
-      console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
-      console.log("📝 readContracts", readContracts);
-      console.log("🌍 DAI contract on mainnet:", mainnetContracts);
-      console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
-      console.log("🔐 writeContracts", writeContracts);
+      // console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
+      // console.log("🌎 mainnetProvider", mainnetProvider);
+      // console.log("🏠 localChainId", localChainId);
+      // console.log("👩‍💼 selected address:", address);
+      // console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
+      // console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
+      // console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
+      // console.log("📝 readContracts", readContracts);
+      // console.log("🌍 DAI contract on mainnet:", mainnetContracts);
+      // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
+      // console.log("🔐 writeContracts", writeContracts);
+      console.log("🪲 ~ file: App.jsx:93 ~ App ~ localProvider", localProvider);
     }
   }, [
     mainnetProvider,

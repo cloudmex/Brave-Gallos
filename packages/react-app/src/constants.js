@@ -217,7 +217,7 @@ export const NETWORKS = {
     color: "#bea925",
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     chainId: 97,
-    blockExplorer: "https://testnet.bscscan.com",
+    blockExplorer: "https://testnet.bscscan.com/",
   },
 };
 

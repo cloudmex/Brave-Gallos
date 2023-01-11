@@ -2,7 +2,7 @@
 
 const { ethers } = require("hardhat");
 
-const localChainId = "31337";
+const localChainId = "97";
 
 // const sleep = (ms) =>
 //   new Promise((r) =>
@@ -20,6 +20,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   let teamWallet ="0xb6A2f9b8fd10E7AfBac15b3DB96828B018A909d7"
   let CHAINLINKCOORDINATORADDRESS="0x6a2aad07396b36fe02a22b33cf443582f682c82f"
   let LINK_ETH_FEEDADDRESS="0xdc530d9457755926550b59e8eccdae7624181557"
+  let player="0x766a5882B53bAF0EFa8F7c99Fe4944A8C7c1102c";
   // await deploy("YourContract", {
   //   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
   //   from: deployer,
@@ -67,6 +68,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   
    console.log(await Coin.bank());
+
+   Coin.wager(1,player,10000000000000000,20000000000000000)
   /*  await YourContract.setPurpose("Hello");
   
     // To take ownership of yourContract using the ownable library uncomment next line and add the 

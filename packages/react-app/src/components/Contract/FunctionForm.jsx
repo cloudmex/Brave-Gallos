@@ -188,9 +188,12 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
             onClick={async () => {
               const args = functionInfo.inputs.map((input, inputIndex) => {
                 const key = getFunctionInputKey(functionInfo, input, inputIndex);
+                console.log("🪲 ~ file: FunctionForm.jsx:191 ~ args ~ key", key);
                 let value = form[key];
+                console.log("🪲 ~ file: FunctionForm.jsx:193 ~ args ~ value", value);
                 if (["array", "tuple"].includes(input.baseType)) {
                   value = JSON.parse(value);
+                  console.log("🪲 ~ file: FunctionForm.jsx:196 ~ args ~ value", value);
                 } else if (input.type === "bool") {
                   if (value === "true" || value === "1" || value === "0x1" || value === "0x01" || value === "0x0001") {
                     value = 1;
@@ -205,17 +208,22 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
               if (functionInfo.stateMutability === "view" || functionInfo.stateMutability === "pure") {
                 try {
                   const returned = await contractFunction(...args);
+                  console.log("🪲 ~ file: FunctionForm.jsx:212 ~ onClick={ ~ returned", returned);
+                  console.log("🪲 ~ file: FunctionForm.jsx:212 ~ onClick={ ~ args", args);
                   handleForm(returned);
                   result = tryToDisplayAsText(returned);
+                  console.log("🪲 ~ file: FunctionForm.jsx:216 ~ result", result);
                 } catch (err) {
                   console.error(err);
                 }
               } else {
                 const overrides = {};
                 if (txValue) {
+                  console.log("🪲 ~ file: FunctionForm.jsx:223 ~ txValue", txValue);
                   overrides.value = txValue; // ethers.utils.parseEther()
                 }
                 if (gasPrice) {
+                  console.log("🪲 ~ file: FunctionForm.jsx:227 ~ gasPrice", gasPrice);
                   overrides.gasPrice = gasPrice;
                 }
                 // Uncomment this if you want to skip the gas estimation for each transaction
@@ -223,11 +231,13 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
 
                 // console.log("Running with extras",extras)
                 const returned = await tx(contractFunction(...args, overrides));
+                console.log("🪲 ~ file: FunctionForm.jsx:235 ~ returned", returned);
                 handleForm(returned);
                 result = tryToDisplay(returned);
               }
 
               console.log("SETTING RESULT:", result);
+              console.log("🪲 ~ file: FunctionForm.jsx:241 ~ onClick={ ~ result", result);
               setReturnValue(result);
               triggerRefresh(true);
             }}
