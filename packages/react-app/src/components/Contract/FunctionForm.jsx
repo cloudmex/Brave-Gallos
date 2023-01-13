@@ -188,6 +188,9 @@ export default function FunctionForm({ contractFunction, functionInfo, provider,
             onClick={async () => {
               const args = functionInfo.inputs.map((input, inputIndex) => {
                 const key = getFunctionInputKey(functionInfo, input, inputIndex);
+                console.log("🪲 ~ file: FunctionForm.jsx:191 ~ args ~ inputIndex", inputIndex);
+                console.log("🪲 ~ file: FunctionForm.jsx:191 ~ args ~ input", input);
+                console.log("🪲 ~ file: FunctionForm.jsx:191 ~ args ~ functionInfo", functionInfo);
                 console.log("🪲 ~ file: FunctionForm.jsx:191 ~ args ~ key", key);
                 let value = form[key];
                 console.log("🪲 ~ file: FunctionForm.jsx:193 ~ args ~ value", value);

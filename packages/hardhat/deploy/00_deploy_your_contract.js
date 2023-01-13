@@ -20,7 +20,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   let teamWallet ="0xb6A2f9b8fd10E7AfBac15b3DB96828B018A909d7"
   let CHAINLINKCOORDINATORADDRESS="0x6a2aad07396b36fe02a22b33cf443582f682c82f"
   let LINK_ETH_FEEDADDRESS="0xdc530d9457755926550b59e8eccdae7624181557"
-  let player="0x766a5882B53bAF0EFa8F7c99Fe4944A8C7c1102c";
+  let bgtoken="0x8d9aCc9f7C23B4121AadB356D43cD1Cf46EB8565";
+  let ethAddress="0x0000000000000000000000000000000000000000";
   // await deploy("YourContract", {
   //   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
   //   from: deployer,
@@ -69,7 +70,18 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   
    console.log(await Coin.bank());
 
-   Coin.wager(1,player,10000000000000000,20000000000000000)
+   //const transaction =  await  Coin.wager(1,BGToken.address, "10000000000000000" , {  gasLimit: 3e7} ); // send the transact but fails
+   const transaction =  await  Coin.wager({ face:1, token:BGToken.address, tokenAmount:BigInt(10000000000000000), gasLimit: 3e7} );
+
+   //const transaction =  await  Coin.wager(1,ethAddress, "20000000000000000" , {  gasLimit: 3e7} );
+   
+   
+  const data = Promise.resolve(transaction)
+    data.then(value => {
+
+          console.log(value)
+
+      });
   /*  await YourContract.setPurpose("Hello");
   
     // To take ownership of yourContract using the ownable library uncomment next line and add the 
