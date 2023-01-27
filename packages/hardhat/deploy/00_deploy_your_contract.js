@@ -109,6 +109,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * * 11- setTokenVRFSubId *
    * ! It's already deployed *
    * ? Set the balance risk for a token *
+   * TODO *
    * @param token - address : The bnb address  for us *
    * @param balanceRisk - uint64 : true or falce   *
  */
@@ -163,115 +164,21 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * @param token - address :    *
    * @param tokenAmount - uint256 :    *
  */
-//await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
+   const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
 
-
-
-  // await deploy("YourContract", {
-  //   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-  //   from: deployer,
-  //   // args: [ "Hello", ethers.utils.parseEther("1.5") ],
-  //   log: true,
-  //   waitConfirmations: 5,
-  // });
-
-  
-//   await deploy("BraveGallosToken", {
-//     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-//     from: deployer,
-//     //args: [ "BraveGallosToken" ],
-//     log: true,
-//     waitConfirmations: 5,
-//   });
- 
-
-  
-//   // Getting a previously deployed contract
-//  // const YourContract = await ethers.getContract("YourContract", deployer);
-//    const BGToken = await ethers.getContract("BraveGallosToken", deployer);
- 
-// Deploy cointoss
-// await deploy("CoinToss", {
-//   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-//   from: deployer,
-//   args: [Bank.address,CHAINLINKCOORDINATORADDRESS,LINK_ETH_FEEDADDRESS],
-//   log: true,
-//   waitConfirmations: 5,
-// });
-
-
-
-
-  // //Approve the bank as allowance in the tokeb
-  // await BGToken.approve(Bank.address,10000000000000000000000);//number of the tokens that the bank coul spend
-  // await BGToken.transfer(Bank.address,10000000000000000000000);//transfer the tokens that can spend
-  // console.log("the final BGT's bank balance: ",await BGToken.balanceOf(Bank.address))
-  //Listing our ERC20 at the bank
-  
-
-  
-
-
-  //Set to Cointoss a role in the bank
-//  await Bank.grantRole("0x6a64baf327d646d1bca72653e2a075d15fd6ac6d8cbd7f6ee03fc55875e0fa88",Coin.address,{  gasLimit: 3e7});
-  //Add to the bank our erc20
-//  await Bank.addToken(BGToken.address);//number of the tokens that the bank coul spend
-//   //Set allowance to erc20
-//   await Bank.setAllowedToken(ethAddress,true);
-//   await Bank.setAllowedToken(BGToken.address,true);
-// //Set the balance risk
-// await Bank.setBalanceRisk(ethAddress,200);
-// await Bank.setBalanceRisk(BGToken.address,200);
-
-// //add the subcription id
-// //for thos you must to add first into vfr as consumer at the cointoss and the token
-// await Bank.setTokenVRFSubId(ethAddress,subscription_id);
-// await Bank.setTokenVRFSubId(BGToken.address,subscription_id);
-
-// await Bank.setHouseEdgeSplit(ethAddress,4000,3000,0,2000,1000);
-// await Bank.setHouseEdgeSplit(BGToken.address,4000,3000,0,2000,100);
- 
- 
-
- 
-
-//   //Set Chainlink Co...
-//   await Coin.setChainlinkConfig(3,keyhash);
-// //Set House Edge
-// await Coin.setHouseEdge("0x0000000000000000000000000000000000000000",350);
-// await Coin.setHouseEdge(BGToken.address,350);
-// //Set VRF Callback...
-// await Coin.setVRFCallbackGasLimit("0x0000000000000000000000000000000000000000",300000);
-// await Coin.setVRFCallbackGasLimit(BGToken.address,300000);
 
 
   
-   console.log("DEPLOY SUCCESSFULLY.");
-
-  // const transaction =  await  Coin.wager(1,BGToken.address, "10000000000000000" , {  gasLimit: 3e7} ); // send the transact but fails
-   //const transaction =  await  Coin.wager({ face:1, token:BGToken.address, tokenAmount:BigInt(10000000000000000), gasLimit: 3e7} );
-
-   //const transaction =  await  Coin.wager(1,ethAddress, "20000000000000000" , {  gasLimit: 3e7} );
    
+ 
    
-  // const data = Promise.resolve(transaction)
-  //   data.then(value => {
+  const data = Promise.resolve(transaction)
+    data.then(value => {
 
-  //         console.log(value)
+          console.log(value)
 
-  //     });
-  /*  await YourContract.setPurpose("Hello");
+      });
   
-    // To take ownership of yourContract using the ownable library uncomment next line and add the 
-    // address you want to be the owner. 
-    
-    await YourContract.transferOwnership(
-      "ADDRESS_HERE"
-    );
-
-    //const YourContract = await ethers.getContractAt('YourContract', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
-  */
-
   /*
   //If you want to send value to an address from the deployer
   const deployerWallet = ethers.provider.getSigner()
