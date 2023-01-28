@@ -63,7 +63,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * @param role - byte32 : GAME_ROLE is 0x6a64baf327d646d1bca72653e2a075d15fd6ac6d8cbd7f6ee03fc55875e0fa88*
    * @param account - address : Game address to be granted as GAME_ROLE *
  */
- //await Bank.grantRole(GAME_ROLE,Coin.address,{  gasLimit: 3e7});
+// await Bank.grantRole(GAME_ROLE,Coin.address,{  gasLimit: 3e7});
 /**
    * * 6- Set the chainlink basic confing in the Cointoss  *
    * ! It's already deployed *
@@ -158,28 +158,23 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
 /**
    * * 14- Wager *
-    * ! It's already deployed *
+   * ! It's already deployed *
    * ? Play the first wager in cointoss *
    * @param face - bool : The bnb address  for us *
    * @param token - address :    *
    * @param tokenAmount - uint256 :    *
  */
-   const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
+  // const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
 
+  // const data = Promise.resolve(transaction)
+  //   data.then(value => {
 
+  //         console.log(value)
 
+  //     });
   
-   
- 
-   
-  const data = Promise.resolve(transaction)
-    data.then(value => {
-
-          console.log(value)
-
-      });
-  
-  /*
+  //
+   /*
   //If you want to send value to an address from the deployer
   const deployerWallet = ethers.provider.getSigner()
   await deployerWallet.sendTransaction({
@@ -210,6 +205,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // try {
   //   if (chainId !== localChainId) {
   //     await run("verify:verify", {
+
   //       address: YourContract.address,
   //       contract: "contracts/YourContract.sol:YourContract",
   //       constructorArguments: [],
