@@ -31,6 +31,7 @@ import externalContracts from "./contracts/external_contracts";
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { getRPCPollTime, Transactor, Web3ModalSetup } from "./helpers";
 import { Home, ExampleUI, Hints, Subgraph } from "./views";
+import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -293,6 +294,7 @@ function App(props) {
               blockExplorer={blockExplorer}
             />
           </div>
+          <ThemeSwitch />
         </div>
       </Header>
       {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
@@ -306,7 +308,17 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
-      <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
+
+      <Cointoss
+        name="CoinToss"
+        currentAccount={address}
+        signer={userSigner}
+        provider={localProvider}
+        address={address}
+        blockExplorer={blockExplorer}
+        contractConfig={contractConfig}
+      />
+      {/*  <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
           <Link to="/">App Homea</Link>
         </Menu.Item>
@@ -338,15 +350,15 @@ function App(props) {
 
       <Switch>
         <Route exact path="/">
-          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
+          //pass in any web3 props to this Home component. For example, yourLocalBalance  
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
         <Route exact path="/debug">
-          {/*
+           
                 🎛 this scaffolding is full of commonly used components
                 this <Contract/> component will automatically parse your ABI
                 and give you a form to interact with it locally
-            */}
+             
 
           <Contract
             name="YourContract"
@@ -360,11 +372,7 @@ function App(props) {
         </Route>
 
         <Route exact path="/cointoss">
-          {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
+          
 
           <Contract
             name="CoinToss"
@@ -377,11 +385,7 @@ function App(props) {
           />
         </Route>
         <Route exact path="/bank">
-          {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
+          
 
           <Contract
             name="Bank"
@@ -394,11 +398,7 @@ function App(props) {
           />
         </Route>
         <Route exact path="/braveToken">
-          {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
+           
 
           <Contract
             name="BraveGallosToken"
@@ -443,16 +443,7 @@ function App(props) {
             contractConfig={contractConfig}
             chainId={1}
           />
-          {/*
-            <Contract
-              name="UNI"
-              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
-              signer={userSigner}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer="https://etherscan.io/"
-            />
-            */}
+         
         </Route>
         <Route path="/subgraph">
           <Subgraph
@@ -464,9 +455,9 @@ function App(props) {
         </Route>
       </Switch>
 
-      <ThemeSwitch />
+     
 
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
+       🗺 Extra UI like gas price, eth price, faucet, and support: 
       <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
         <Row align="middle" gutter={[4, 4]}>
           <Col span={8}>
@@ -495,7 +486,7 @@ function App(props) {
         <Row align="middle" gutter={[4, 4]}>
           <Col span={24}>
             {
-              /*  if the local provider has a signer, let's show the faucet:  */
+              //  if the local provider has a signer, let's show the faucet:   
               faucetAvailable ? (
                 <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
               ) : (
@@ -504,7 +495,7 @@ function App(props) {
             }
           </Col>
         </Row>
-      </div>
+      </div>*/}
     </div>
   );
 }

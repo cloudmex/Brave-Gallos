@@ -39,7 +39,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * @param token - address : The bnb address  for us *
    * @param amount - uint256 :    *
  */
-await Bank.deposit(bnbAddress,0,{ value:BigInt(100000000000000000),gasLimit: 1e7});
+//await Bank.deposit(bnbAddress,0,{ value:BigInt(100000000000000000),gasLimit: 1e7});
 
 
 /**
@@ -50,14 +50,14 @@ await Bank.deposit(bnbAddress,0,{ value:BigInt(100000000000000000),gasLimit: 1e7
    * @param token - address :    *
    * @param tokenAmount - uint256 :    *
  */
-   const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
+ //  const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
 
-  const data = Promise.resolve(transaction)
-    data.then(value => {
+  // const data = Promise.resolve(transaction)
+  //   data.then(value => {
 
-          console.log(value)
+  //         console.log(value)
 
-      });
+  //     });
   
   /*
   //If you want to send value to an address from the deployer
