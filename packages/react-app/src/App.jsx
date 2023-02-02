@@ -98,10 +98,10 @@ function App(props) {
   const localProviderPollingTime = getRPCPollTime(localProvider);
   const mainnetProviderPollingTime = getRPCPollTime(mainnetProvider);
 
-  if (DEBUG) console.log(`Using ${selectedNetwork} network`);
+  //if (DEBUG) console.log(`Using ${selectedNetwork} network`);
 
   // 🛰 providers
-  if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
+  // if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
@@ -212,7 +212,7 @@ function App(props) {
       // console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
       // console.log("🔐 writeContracts", writeContracts);
-      console.log("🪲 ~ file: App.jsx:93 ~ App ~ localProvider", localProvider);
+      //  console.log("🪲 ~ file: App.jsx:93 ~ App ~ localProvider", localProvider);
     }
   }, [
     mainnetProvider,
@@ -233,18 +233,18 @@ function App(props) {
     setInjectedProvider(new ethers.providers.Web3Provider(provider));
 
     provider.on("chainChanged", chainId => {
-      console.log(`chain changed to ${chainId}! updating providers`);
+      //  console.log(`chain changed to ${chainId}! updating providers`);
       setInjectedProvider(new ethers.providers.Web3Provider(provider));
     });
 
     provider.on("accountsChanged", () => {
-      console.log(`account changed!`);
+      //  console.log(`account changed!`);
       setInjectedProvider(new ethers.providers.Web3Provider(provider));
     });
 
     // Subscribe to session disconnection
     provider.on("disconnect", (code, reason) => {
-      console.log(code, reason);
+      //console.log(code, reason);
       logoutOfWeb3Modal();
     });
     // eslint-disable-next-line
