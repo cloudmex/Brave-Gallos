@@ -1,7 +1,8 @@
 import { Card } from "antd";
 import { useContractExistsAtAddress, useContractLoader } from "eth-hooks";
+// eslint-disable-next-line
 import React, { useMemo, useState } from "react";
-import { Button, Input, Stack, Flex, Spacer } from "@chakra-ui/react";
+import { Button, Input, Stack, Flex } from "@chakra-ui/react";
 // import Address from "../Address";
 // import Balance from "../Balance";
 // import DisplayVariable from "./DisplayVariable";
@@ -79,7 +80,7 @@ export default function Contract({
     return results;
   }, [contract, show]);
 
-  const [refreshRequired, triggerRefresh] = useState(false);
+  //const [refreshRequired, triggerRefresh] = useState(false);
   const contractDisplay = displayedContractFunctions.map(contractFuncInfo => {
     const contractFunc =
       contractFuncInfo[1].stateMutability === "view" || contractFuncInfo[1].stateMutability === "pure"
@@ -138,7 +139,7 @@ export default function Contract({
       </Card>
       <div>
         <h1>Wager</h1>
-        <Flex alignItems="center">
+        <Flex width="100%" alignItems="center">
           <Stack spacing={3}>
             <Input type="bool" placeholder="Coin or tail" size="lg" />
             <Input type="text" placeholder="Token Address" size="lg" />
