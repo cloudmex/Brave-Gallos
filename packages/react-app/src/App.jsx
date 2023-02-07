@@ -24,7 +24,7 @@ import {
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
-  Contract,
+  // Contract,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -311,7 +311,7 @@ function App(props) {
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
 
-      {/* <Cointoss
+      <Cointoss
         name="CoinToss"
         currentAccount={address}
         signer={userSigner}
@@ -319,8 +319,8 @@ function App(props) {
         userAddress={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
-      /> */}
-      <Contract
+      />
+      {/* <Contract
         name="CoinToss"
         price={price}
         signer={userSigner}
@@ -328,7 +328,7 @@ function App(props) {
         address={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
-      />
+      /> */}
       {/*  <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
           <Link to="/">App Homea</Link>

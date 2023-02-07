@@ -128,6 +128,11 @@ export default function Contract({
     return null;
   });
 
+  /**
+   * * PlayWager *
+   * ? this method is used to play the Cointoss game ?
+   * TODO Review how to use the methods from the ABI *
+   */
   const PlayWager = async () => {
     console.log("🪲 ~ file: Cointoss.js:135 ~ PlayWager ~ provider", provider);
     const gasprice = await provider.getGasPrice();
@@ -136,7 +141,8 @@ export default function Contract({
     console.log("🪲 ~ file: Cointoss.js:138 ~ PlayWager ~ signer", signer);
     console.log("🪲 ~ file: Cointoss.js:149 ~ PlayWager ~ contract", contract);
 
-    // const contractFunc = contract.connect(signer)[contractFuncInfo[0]];
+    // * this varaible contains the contract signeb by the user
+    //  const contractFunc = contract.connect(signer)[contractFuncInfo[0]];
 
     // console.log("wei", ethers.utils.parseEther(wagetInputs.tokenAmount).toString());
 
@@ -170,6 +176,7 @@ export default function Contract({
         loading={contractDisplay && contractDisplay.length <= 0}
       >
         {contractIsDeployed ? contractDisplay : null}
+        console.log("🪲 ~ file: Cointoss.js:173 ~ contractIsDeployed", contractIsDeployed)
       </Card>
       <div>
         <h1>Wager</h1>
