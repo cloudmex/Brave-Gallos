@@ -1,8 +1,10 @@
 import { Card } from "antd";
 import { useContractExistsAtAddress, useContractLoader } from "eth-hooks";
-// eslint-disable-next-line
+
 import React, { useMemo, useState } from "react";
-import { Button, Input, Stack, Flex } from "@chakra-ui/react";
+import { Button, Input, Stack, Flex, Text } from "@chakra-ui/react";
+// eslint-disable-next-line
+const { ethers } = require("ethers");
 // import Address from "../Address";
 // import Balance from "../Balance";
 // import DisplayVariable from "./DisplayVariable";
@@ -58,7 +60,14 @@ export default function Contract({
   blockExplorer,
   chainId,
   contractConfig,
+  userAddress,
 }) {
+  const [wagetInputs, setWagertInputs] = useState({
+    face: "",
+    tokenAddress: "",
+    tokenAmount: 0,
+  });
+
   const contracts = useContractLoader(provider, contractConfig, chainId);
   let contract;
   if (!customContract) {
@@ -119,6 +128,31 @@ export default function Contract({
     return null;
   });
 
+  const PlayWager = async () => {
+    console.log("🪲 ~ file: Cointoss.js:135 ~ PlayWager ~ provider", provider);
+    const gasprice = await provider.getGasPrice();
+    console.log("🪲 ~ file: Cointoss.js:134 ~ PlayWager ~ gasprice", gasprice);
+    const signer = await provider.getSigner();
+    console.log("🪲 ~ file: Cointoss.js:138 ~ PlayWager ~ signer", signer);
+    console.log("🪲 ~ file: Cointoss.js:149 ~ PlayWager ~ contract", contract);
+
+    // const contractFunc = contract.connect(signer)[contractFuncInfo[0]];
+
+    // console.log("wei", ethers.utils.parseEther(wagetInputs.tokenAmount).toString());
+
+    // let tx = await contract
+    //   .connect(signer)
+    //   .wager(wagetInputs.face, wagetInputs.tokenAddress, ethers.utils.parseEther(wagetInputs.tokenAmount), {
+    //     value: ethers.utils.parseEther(wagetInputs.tokenAmount),
+    //   });
+    // console.log("🪲 ~ file: Cointoss.js:145 ~ PlayWager ~ tx", tx);
+
+    // const tx = {
+    //   from:userAddress,
+    //   to:contract.address,
+
+    // }
+  };
   return (
     <div style={{ margin: "auto", width: "70vw" }}>
       <Card
@@ -141,15 +175,42 @@ export default function Contract({
         <h1>Wager</h1>
         <Flex width="100%" alignItems="center">
           <Stack spacing={3}>
-            <Input type="bool" placeholder="Coin or tail" size="lg" />
-            <Input type="text" placeholder="Token Address" size="lg" />
+            <Input
+              type="bool"
+              placeholder="Coin or tail"
+              size="lg"
+              onChange={e => {
+                setWagertInputs({ ...wagetInputs, face: e.target.value });
+              }}
+            />
+            <Input
+              type="text"
+              placeholder="Token Address"
+              size="lg"
+              onChange={e => {
+                setWagertInputs({ ...wagetInputs, tokenAddress: e.target.value });
+              }}
+            />
           </Stack>
           <Stack spacing={3}>
-            <Input type="number" placeholder="bet amount" size="lg" />
-            <Button colorScheme="teal" size="lg">
+            <Input
+              type="number"
+              placeholder="bet amount"
+              size="lg"
+              onChange={e => {
+                setWagertInputs({ ...wagetInputs, tokenAmount: e.target.value });
+              }}
+            />
+            <Button colorScheme="teal" size="lg" onClick={PlayWager}>
               {" "}
               Play{" "}
             </Button>
+          </Stack>
+          <Stack spacing={1}>
+            <Text>BET RESUME: </Text>
+            <Text>FACE: {wagetInputs.face} </Text>
+            <Text>Token: {wagetInputs.tokenAddress} </Text>
+            <Text>Token amount: {wagetInputs.tokenAmount} </Text>
           </Stack>
         </Flex>
       </div>

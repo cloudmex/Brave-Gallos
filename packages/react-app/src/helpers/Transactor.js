@@ -13,21 +13,28 @@ const DEBUG = true;
 
 export default function Transactor(providerOrSigner, gasPrice, etherscan) {
   if (typeof providerOrSigner !== "undefined") {
+    console.log("🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲Transactor🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲🪲");
+
     // eslint-disable-next-line consistent-return
     return async (tx, callback) => {
       let signer;
       let network;
       let provider;
       if (ethers.Signer.isSigner(providerOrSigner) === true) {
+        console.log("🪲 ~ file: Transactor.js:24 ~ return ~ Provider", providerOrSigner);
         provider = providerOrSigner.provider;
+        console.log("🪲 ~ file: Transactor.js:25 ~ return ~ provider", provider);
         signer = providerOrSigner;
+        console.log("🪲 ~ file: Transactor.js:27 ~ return ~ signer", signer);
         network = providerOrSigner.provider && (await providerOrSigner.provider.getNetwork());
+        console.log("🪲 ~ file: Transactor.js:29 ~ return ~ network", network);
       } else if (providerOrSigner._isProvider) {
+        console.log("🪲 ~ file: Transactor.js:24 ~ return ~ NoProvider", providerOrSigner);
+
         provider = providerOrSigner;
         signer = providerOrSigner.getSigner();
         network = await providerOrSigner.getNetwork();
       }
-
       console.log("network", network);
       var options = null;
       var notify = null;

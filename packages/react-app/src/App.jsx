@@ -24,6 +24,7 @@ import {
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
+  Contract,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -31,6 +32,7 @@ import externalContracts from "./contracts/external_contracts";
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { getRPCPollTime, Web3ModalSetup } from "./helpers";
 //import { Home, ExampleUI, Hints, Subgraph } from "./views";
+// eslint-disable-next-line
 import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
 
@@ -309,9 +311,18 @@ function App(props) {
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
 
-      <Cointoss
+      {/* <Cointoss
         name="CoinToss"
         currentAccount={address}
+        signer={userSigner}
+        provider={localProvider}
+        userAddress={address}
+        blockExplorer={blockExplorer}
+        contractConfig={contractConfig}
+      /> */}
+      <Contract
+        name="CoinToss"
+        price={price}
         signer={userSigner}
         provider={localProvider}
         address={address}
