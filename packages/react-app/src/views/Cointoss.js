@@ -5,6 +5,7 @@ import React, { useMemo, useState } from "react";
 import { Button, Input, Stack, Flex, Text } from "@chakra-ui/react";
 // eslint-disable-next-line
 const { ethers } = require("ethers");
+
 // import Address from "../Address";
 // import Balance from "../Balance";
 // import DisplayVariable from "./DisplayVariable";
@@ -61,6 +62,9 @@ export default function Contract({
   chainId,
   contractConfig,
   userAddress,
+  selectedChainId,
+  targetNetwork,
+  userProviderAndSigner,
 }) {
   const [wagetInputs, setWagertInputs] = useState({
     face: "",
@@ -72,7 +76,7 @@ export default function Contract({
   let contract;
   if (!customContract) {
     contract = contracts ? contracts[name] : "";
-    console.log("🪲 ~ file: Cointoss.js:64 ~ contracts[name]", contracts[name]);
+    //console.log("🪲 ~ file: Cointoss.js:64 ~ contracts[name]", contracts[name]);
   } else {
     contract = customContract;
   }
@@ -134,24 +138,69 @@ export default function Contract({
    * TODO Review how to use the methods from the ABI *
    */
   const PlayWager = async () => {
-    console.log("🪲 ~ file: Cointoss.js:135 ~ PlayWager ~ provider", provider);
-    const gasprice = await provider.getGasPrice();
-    console.log("🪲 ~ file: Cointoss.js:134 ~ PlayWager ~ gasprice", gasprice);
-    const signer = await provider.getSigner();
-    console.log("🪲 ~ file: Cointoss.js:138 ~ PlayWager ~ signer", signer);
-    console.log("🪲 ~ file: Cointoss.js:149 ~ PlayWager ~ contract", contract);
+    let bnbAddress = "0x0000000000000000000000000000000000000000";
+    let Coincontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["CoinToss"];
+
+    console.log("🪲 ~ file: Cointoss.js:147 ~ PlayWager ~ userProviderAndSigner", userProviderAndSigner);
+
+    // this generate a new instance of the contract to interact with it
+    const Coin = new ethers.Contract(Coincontract.address, Coincontract.abi, userProviderAndSigner.provider);
+    console.log("🪲 ~ file: Cointoss.js:148 ~ PlayWager ~ Coin", Coin);
+
+    const transaction = await Coin.wager(1, bnbAddress, 1000000000000000, { value: 1000000000000000, gasLimit: 3e7 });
+    console.log("🪲 ~ file: Cointoss.js:143 ~ PlayWager ~ transaction", transaction);
+
+    // if (window.ethereum && window.ethereum.isMetaMask) {
+    // 	//console.log('MetaMask Here!');
+
+    // 	window.ethereum.request({ method: 'eth_requestAccounts'})
+    // 	.then(async (result) => {
+
+    //     const gasprice = await provider.getGasPrice();
+
+    //     const signer = await provider.getSigner();
+
+    //     let params=[{
+    //       from:userAddress, /* the address from which the amount is to be taken  * */
+    //       to:contracts["CoinToss"].address, /* the account to which the amount is to be sent * */
+    //       gas:100_000_000,
+
+    //   }];
+    //   console.log("🪲 ~ file: Cointoss.js:158 ~ targetNetwork", targetNetwork);
+    //   let Coincontract =contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["CoinToss"];
+    //    console.log("🪲 ~ file: Cointoss.js:160 ~ .then ~ Coincontract", Coincontract)
+    //    let contractLoaded=  new ethers.Contract(
+
+    //     Coincontract.address,
+    //     Coincontract.abi,
+    //     provider
+    //   );
+    //    console.log("🪲 ~ file: Cointoss.js:165 ~ .then ~ contractLoaded", contractLoaded)
+    //    let _value =  1000000000000000 ;
+    //    let playewager = await contractLoaded.wager(1,"0x0000000000000000000000000000000000000000",_value,{  value:_value,gasLimit: 3e7});
+    //    console.log("🪲 ~ file: Cointoss.js:169 ~ .then ~ playewager", playewager)
+
+    //console.log("🪲 ~ file: Cointoss.js:165 ~ .then ~ res", res)
+
+    // })
+    // .catch(error => {
+    // 	// setErrorMessage(error.message);
+
+    // });
+
+    //}
 
     // * this varaible contains the contract signeb by the user
     //  const contractFunc = contract.connect(signer)[contractFuncInfo[0]];
 
-    // console.log("wei", ethers.utils.parseEther(wagetInputs.tokenAmount).toString());
+    // //console.log("wei", ethers.utils.parseEther(wagetInputs.tokenAmount).toString());
 
     // let tx = await contract
     //   .connect(signer)
     //   .wager(wagetInputs.face, wagetInputs.tokenAddress, ethers.utils.parseEther(wagetInputs.tokenAmount), {
     //     value: ethers.utils.parseEther(wagetInputs.tokenAmount),
     //   });
-    // console.log("🪲 ~ file: Cointoss.js:145 ~ PlayWager ~ tx", tx);
+    // //console.log("🪲 ~ file: Cointoss.js:145 ~ PlayWager ~ tx", tx);
 
     // const tx = {
     //   from:userAddress,
@@ -159,6 +208,8 @@ export default function Contract({
 
     // }
   };
+  console.log("🪲 ~ file: Cointoss.js:218 ~ PlayWager ~ provider", provider);
+  console.log("🪲 ~ file: Cointoss.js:218 ~ PlayWager ~ provider", provider);
   return (
     <div style={{ margin: "auto", width: "70vw" }}>
       <Card
@@ -176,7 +227,6 @@ export default function Contract({
         loading={contractDisplay && contractDisplay.length <= 0}
       >
         {contractIsDeployed ? contractDisplay : null}
-        console.log("🪲 ~ file: Cointoss.js:173 ~ contractIsDeployed", contractIsDeployed)
       </Card>
       <div>
         <h1>Wager</h1>

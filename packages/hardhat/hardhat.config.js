@@ -29,7 +29,7 @@ function mnemonic() {
     return fs.readFileSync("./mnemonic.txt").toString().trim();
   } catch (e) {
     if (defaultNetwork !== "localhost") {
-      console.log(
+      //console.log(
         "☢️ WARNING: No mnemonic file created for a deploy account. Try `yarn run generate` and then `yarn run account`."
       );
     }
@@ -323,15 +323,15 @@ const DEBUG = false;
 
 function debug(text) {
   if (DEBUG) {
-    console.log(text);
+    //console.log(text);
   }
 }
 
 task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom();
   const privateKey = randomWallet._signingKey().privateKey;
-  console.log("🔐 WALLET Generated as " + randomWallet.address + "");
-  console.log("🔗 http://localhost:3000/pk#" + privateKey);
+  //console.log("🔐 WALLET Generated as " + randomWallet.address + "");
+  //console.log("🔗 http://localhost:3000/pk#" + privateKey);
 });
 
 task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
@@ -343,7 +343,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
   .setAction(async (taskArgs, { network, ethers }) => {
     const randomWallet = ethers.Wallet.createRandom();
     const privateKey = randomWallet._signingKey().privateKey;
-    console.log("🔐 WALLET Generated as " + randomWallet.address + "");
+    //console.log("🔐 WALLET Generated as " + randomWallet.address + "");
     const url = taskArgs.url ? taskArgs.url : "http://localhost:3000";
 
     let localDeployerMnemonic;
@@ -367,7 +367,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
         localDeployerMnemonic
       );
       deployerWallet = deployerWallet.connect(ethers.provider);
-      console.log(
+      //console.log(
         "💵 Sending " +
           amount +
           " ETH to " +
@@ -375,16 +375,16 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
           " using deployer account"
       );
       const sendresult = await deployerWallet.sendTransaction(tx);
-      console.log("\n" + url + "/pk#" + privateKey + "\n");
+      //console.log("\n" + url + "/pk#" + privateKey + "\n");
     } else {
-      console.log(
+      //console.log(
         "💵 Sending " +
           amount +
           " ETH to " +
           randomWallet.address +
           " using local node"
       );
-      console.log("\n" + url + "/pk#" + privateKey + "\n");
+      //console.log("\n" + url + "/pk#" + privateKey + "\n");
       return send(ethers.provider.getSigner(), tx);
     }
   });
@@ -396,26 +396,26 @@ task(
     const bip39 = require("bip39");
     const hdkey = require("ethereumjs-wallet/hdkey");
     const mnemonic = bip39.generateMnemonic();
-    if (DEBUG) console.log("mnemonic", mnemonic);
+    if (DEBUG) //console.log("mnemonic", mnemonic);
     const seed = await bip39.mnemonicToSeed(mnemonic);
-    if (DEBUG) console.log("seed", seed);
+    if (DEBUG) //console.log("seed", seed);
     const hdwallet = hdkey.fromMasterSeed(seed);
     const wallet_hdpath = "m/44'/60'/0'/0/";
     const account_index = 0;
     const fullPath = wallet_hdpath + account_index;
-    if (DEBUG) console.log("fullPath", fullPath);
+    if (DEBUG) //console.log("fullPath", fullPath);
     const wallet = hdwallet.derivePath(fullPath).getWallet();
     const privateKey = "0x" + wallet._privKey.toString("hex");
-    if (DEBUG) console.log("privateKey", privateKey);
+    if (DEBUG) //console.log("privateKey", privateKey);
     const EthUtil = require("ethereumjs-util");
     const address =
       "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex");
-    console.log(
+    //console.log(
       "🔐 Account Generated as " +
         address +
         " and set as mnemonic in packages/hardhat"
     );
-    console.log(
+    //console.log(
       "💬 Use 'yarn run account' to get more information about the deployment account."
     );
 
@@ -439,17 +439,17 @@ task(
     let mnemonic = "";
     while (contract_address.indexOf(taskArgs.searchFor) != 0) {
       mnemonic = bip39.generateMnemonic();
-      if (DEBUG) console.log("mnemonic", mnemonic);
+      if (DEBUG) //console.log("mnemonic", mnemonic);
       const seed = await bip39.mnemonicToSeed(mnemonic);
-      if (DEBUG) console.log("seed", seed);
+      if (DEBUG) //console.log("seed", seed);
       const hdwallet = hdkey.fromMasterSeed(seed);
       const wallet_hdpath = "m/44'/60'/0'/0/";
       const account_index = 0;
       const fullPath = wallet_hdpath + account_index;
-      if (DEBUG) console.log("fullPath", fullPath);
+      if (DEBUG) //console.log("fullPath", fullPath);
       const wallet = hdwallet.derivePath(fullPath).getWallet();
       const privateKey = "0x" + wallet._privKey.toString("hex");
-      if (DEBUG) console.log("privateKey", privateKey);
+      if (DEBUG) //console.log("privateKey", privateKey);
       const EthUtil = require("ethereumjs-util");
       address =
         "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex");
@@ -470,16 +470,16 @@ task(
       contract_address = contract_address_long.substring(24); // Trim the first 24 characters.
     }
 
-    console.log(
+    //console.log(
       "⛏  Account Mined as " +
         address +
         " and set as mnemonic in packages/hardhat"
     );
-    console.log(
+    //console.log(
       "📜 This will create the first contract: " +
         chalk.magenta("0x" + contract_address)
     );
-    console.log(
+    //console.log(
       "💬 Use 'yarn run account' to get more information about the deployment account."
     );
 
@@ -498,45 +498,45 @@ task(
     const bip39 = require("bip39");
     try {
       const mnemonic = fs.readFileSync("./mnemonic.txt").toString().trim();
-      if (DEBUG) console.log("mnemonic", mnemonic);
+      if (DEBUG) //console.log("mnemonic", mnemonic);
       const seed = await bip39.mnemonicToSeed(mnemonic);
-      if (DEBUG) console.log("seed", seed);
+      if (DEBUG) //console.log("seed", seed);
       const hdwallet = hdkey.fromMasterSeed(seed);
       const wallet_hdpath = "m/44'/60'/0'/0/";
       const account_index = 0;
       const fullPath = wallet_hdpath + account_index;
-      if (DEBUG) console.log("fullPath", fullPath);
+      if (DEBUG) //console.log("fullPath", fullPath);
       const wallet = hdwallet.derivePath(fullPath).getWallet();
       const privateKey = "0x" + wallet._privKey.toString("hex");
-      if (DEBUG) console.log("privateKey", privateKey);
+      if (DEBUG) //console.log("privateKey", privateKey);
       const EthUtil = require("ethereumjs-util");
       const address =
         "0x" + EthUtil.privateToAddress(wallet._privKey).toString("hex");
 
       const qrcode = require("qrcode-terminal");
       qrcode.generate(address);
-      console.log("‍📬 Deployer Account is " + address);
+      //console.log("‍📬 Deployer Account is " + address);
       for (const n in config.networks) {
-        // console.log(config.networks[n],n)
+        // //console.log(config.networks[n],n)
         try {
           const provider = new ethers.providers.JsonRpcProvider(
             config.networks[n].url
           );
           const balance = await provider.getBalance(address);
-          console.log(" -- " + n + " --  -- -- 📡 ");
-          console.log("   balance: " + ethers.utils.formatEther(balance));
-          console.log(
+          //console.log(" -- " + n + " --  -- -- 📡 ");
+          //console.log("   balance: " + ethers.utils.formatEther(balance));
+          //console.log(
             "   nonce: " + (await provider.getTransactionCount(address))
           );
         } catch (e) {
           if (DEBUG) {
-            console.log(e);
+            //console.log(e);
           }
         }
       }
     } catch (err) {
-      console.log(`--- Looks like there is no mnemonic file created yet.`);
-      console.log(
+      //console.log(`--- Looks like there is no mnemonic file created yet.`);
+      //console.log(
         `--- Please run ${chalk.greenBright("yarn generate")} to create one`
       );
     }
@@ -556,12 +556,12 @@ async function addr(ethers, addr) {
 
 task("accounts", "Prints the list of accounts", async (_, { ethers }) => {
   const accounts = await ethers.provider.listAccounts();
-  accounts.forEach((account) => console.log(account));
+  accounts.forEach((account) => //console.log(account));
 });
 
 task("blockNumber", "Prints the block number", async (_, { ethers }) => {
   const blockNumber = await ethers.provider.getBlockNumber();
-  console.log(blockNumber);
+  //console.log(blockNumber);
 });
 
 task("balance", "Prints an account's balance")
@@ -570,7 +570,7 @@ task("balance", "Prints an account's balance")
     const balance = await ethers.provider.getBalance(
       await addr(ethers, taskArgs.account)
     );
-    console.log(formatUnits(balance, "ether"), "ETH");
+    //console.log(formatUnits(balance, "ether"), "ETH");
   });
 
 function send(signer, txparams) {

@@ -93,6 +93,7 @@ function App(props) {
   const localProvider = useStaticJsonRPC([
     process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
   ]);
+  console.log("🪲 ~ file: App.jsx:96 ~ App ~ localProvider", localProvider);
 
   const mainnetProvider = useStaticJsonRPC(providers, localProvider);
 
@@ -204,8 +205,8 @@ function App(props) {
       mainnetContracts
     ) {
       // console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
-      // console.log("🌎 mainnetProvider", mainnetProvider);
-      // console.log("🏠 localChainId", localChainId);
+      console.log("🌎 mainnetProvider", mainnetProvider);
+      console.log("🏠 localChainId", localChainId);
       // console.log("👩‍💼 selected address:", address);
       // console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
       // console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
@@ -214,7 +215,6 @@ function App(props) {
       // console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
       // console.log("🔐 writeContracts", writeContracts);
-      //  console.log("🪲 ~ file: App.jsx:93 ~ App ~ localProvider", localProvider);
     }
   }, [
     mainnetProvider,
@@ -315,10 +315,13 @@ function App(props) {
         name="CoinToss"
         currentAccount={address}
         signer={userSigner}
+        selectedChainId={selectedChainId}
         provider={localProvider}
         userAddress={address}
         blockExplorer={blockExplorer}
         contractConfig={contractConfig}
+        targetNetwork={targetNetwork}
+        userProviderAndSigner={userProviderAndSigner}
       />
       {/* <Contract
         name="CoinToss"

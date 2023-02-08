@@ -218,14 +218,14 @@ abstract contract Game is
         uint16 numRandomWords,
         address LINK_ETH_feedAddress
     )  {
-               console.log( "Bank:Initilized");
+               //console.log( "Bank:Initilized");
 
         if (
             LINK_ETH_feedAddress == address(0) ||
             chainlinkCoordinatorAddress == address(0) ||
             bankAddress == address(0)
         ) {
-            console.log( "Bank:Reverted by duplicated accounts ln:227");
+            //console.log( "Bank:Reverted by duplicated accounts ln:227");
 
             revert InvalidAddress();
         }
@@ -257,7 +257,7 @@ abstract contract Game is
     /// @param multiplier The bet amount leverage determines the user's profit amount. 10000 = 100% = no profit.
     /// @return A new Bet struct information.
     function _newBet( address tokenAddress,  uint256 tokenAmount,  uint256 multiplier ) internal whenNotPaused nonReentrant returns (Bet memory) {
-         console.log( "Bank:Setting the new bet");
+         //console.log( "Bank:Setting the new bet");
 
         Token storage token = tokens[tokenAddress];
         if (
@@ -298,7 +298,7 @@ abstract contract Game is
                 betAmount = maxBetAmount;
             }
         }
-        console.log( "Bank:setting id :ln:308");
+        //console.log( "Bank:setting id :ln:308");
 
         // Create bet
         uint256 id =  _chainlinkConfig.COORDINATOR.requestRandomWords(
@@ -308,7 +308,7 @@ abstract contract Game is
             token.VRFCallbackGasLimit,
             _chainlinkConfig.numRandomWords
         ); 
-        console.log( "Bank:Storing the bet");
+        //console.log( "Bank:Storing the bet");
         Bet memory newBet = Bet(
             false,
             user,
@@ -325,7 +325,7 @@ abstract contract Game is
 
         // If ERC20, transfer the tokens
         if (!isGasToken) {
-            console.log( "Bank:If ERC20, transfer the tokens");
+            //console.log( "Bank:If ERC20, transfer the tokens");
 
             IERC20(tokenAddress).safeTransferFrom(
                 user,
@@ -333,7 +333,7 @@ abstract contract Game is
                 betAmount
             );
         }
-            console.log( "Bank:Return bet");
+            //console.log( "Bank:Return bet");
 
         return newBet;
     }

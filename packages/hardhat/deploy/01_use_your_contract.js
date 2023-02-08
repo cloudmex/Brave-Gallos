@@ -55,7 +55,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // const data = Promise.resolve(transaction)
   //   data.then(value => {
 
-  //         console.log(value)
+  //         //console.log(value)
 
   //     });
   

@@ -75,7 +75,7 @@ contract CoinToss is Game {
         address chainlinkCoordinatorAddress,
         address LINK_ETH_feedAddress
     ) Game(bankAddress, chainlinkCoordinatorAddress, 1, LINK_ETH_feedAddress) {
-        console.log( "Cointoss initialized");
+        //console.log( "Cointoss initialized");
     }
 
     /// @notice Calculates the target payout amount.
@@ -94,15 +94,15 @@ contract CoinToss is Game {
         address token,
         uint256 tokenAmount
     ) external payable whenNotPaused {
-         console.log( "Cointoss: Placing a new bet");
+         //console.log( "Cointoss: Placing a new bet");
 
         Bet memory bet = _newBet(token, tokenAmount, _getPayout(10000));
-       console.log( "Cointoss: Placing a new bet");
+       //console.log( "Cointoss: Placing a new bet");
 
         coinTossBets[bet.id].face = face;
-       console.log( "Cointoss: Placing set the face value");
+       //console.log( "Cointoss: Placing set the face value");
 
-       console.log( "Cointoss: Emited the bet");
+       //console.log( "Cointoss: Emited the bet");
 
         emit PlaceBet(
             bet.id,

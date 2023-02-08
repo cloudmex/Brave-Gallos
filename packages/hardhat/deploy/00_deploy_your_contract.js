@@ -7,7 +7,7 @@ const localChainId = "97";
 // const sleep = (ms) =>
 //   new Promise((r) =>
 //     setTimeout(() => {
-//       console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
+//       //console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
 //       r();
 //     }, ms)
 //   );
@@ -169,7 +169,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // const data = Promise.resolve(transaction)
   //   data.then(value => {
 
-  //         console.log(value)
+  //         //console.log(value)
 
   //     });
   
