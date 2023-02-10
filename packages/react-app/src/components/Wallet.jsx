@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 
 import { Transactor } from "../helpers";
 import Address from "./Address";
-import AddressInput from "./AddressInput";
+//import AddressInput from "./AddressInput";
 import Balance from "./Balance";
 import EtherInput from "./EtherInput";
 import WalletImport from "./WalletImport";
@@ -58,6 +58,7 @@ export default function Wallet(props) {
   const [open, setOpen] = useState();
   const [qr, setQr] = useState();
   const [amount, setAmount] = useState();
+  // eslint-disable-next-line
   const [toAddress, setToAddress] = useState();
   const [pk, setPK] = useState();
 
@@ -275,13 +276,13 @@ export default function Wallet(props) {
     display = (
       <div>
         <div style={inputStyle}>
-          <AddressInput
+          {/* <AddressInput
             autoFocus
             ensProvider={props.ensProvider}
             placeholder="to address"
             address={toAddress}
             onChange={setToAddress}
-          />
+          /> */}
         </div>
         <div style={inputStyle}>
           <EtherInput
