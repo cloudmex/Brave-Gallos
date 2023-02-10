@@ -8,7 +8,7 @@ import { Transactor } from "../helpers";
 import Address from "./Address";
 //import AddressInput from "./AddressInput";
 import Balance from "./Balance";
-import EtherInput from "./EtherInput";
+
 import WalletImport from "./WalletImport";
 
 const { Text } = Typography;
@@ -57,6 +57,7 @@ export default function Wallet(props) {
 
   const [open, setOpen] = useState();
   const [qr, setQr] = useState();
+  // eslint-disable-next-line
   const [amount, setAmount] = useState();
   // eslint-disable-next-line
   const [toAddress, setToAddress] = useState();
@@ -284,15 +285,7 @@ export default function Wallet(props) {
             onChange={setToAddress}
           /> */}
         </div>
-        <div style={inputStyle}>
-          <EtherInput
-            price={props.price}
-            value={amount}
-            onChange={value => {
-              setAmount(value);
-            }}
-          />
-        </div>
+        <div style={inputStyle}></div>
       </div>
     );
     receiveButton = (
