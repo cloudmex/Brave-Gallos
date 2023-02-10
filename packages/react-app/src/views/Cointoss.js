@@ -66,6 +66,10 @@ export default function Contract({
   targetNetwork,
   userProviderAndSigner,
 }) {
+  console.log("🪲 ~ file: Cointoss.js:69 ~ chainId", chainId);
+  console.log("🪲 ~ file: Cointoss.js:69 ~ contractConfig", contractConfig);
+  console.log("🪲 ~ file: Cointoss.js:69 ~ selectedChainId", selectedChainId);
+  console.log("🪲 ~ file: Cointoss.js:69 ~ userProviderAndSigner", userProviderAndSigner);
   const [wagetInputs, setWagertInputs] = useState({
     face: "",
     tokenAddress: "",

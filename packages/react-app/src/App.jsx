@@ -1,5 +1,6 @@
 //import { Button, Col, Menu, Row } from "antd";
 
+import { Button, Input, Stack, Flex, Text, Select } from "@chakra-ui/react";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -10,7 +11,7 @@ import {
   useUserProviderAndSigner,
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 //import { useLocation } from "react-router-dom";
 import "./App.css";
 import {
@@ -33,7 +34,7 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { getRPCPollTime, Web3ModalSetup } from "./helpers";
 //import { Home, ExampleUI, Hints, Subgraph } from "./views";
 // eslint-disable-next-line
-import Cointoss from "./views/Cointoss";
+//import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -78,6 +79,30 @@ function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [initialNetwork.name, "mainnet", "goerli"];
+  const [wagetInputs, setWagertInputs] = useState({
+    face: "",
+    tokenAddress: "",
+    tokenAmount: 0,
+  });
+  const [tokensaddress, setTokensaddress] = useState([
+    {
+      id: 0,
+      value: "0x0000000000000000000000000000000000000000",
+      label: "BNB",
+    },
+  ]);
+  const [coinortail, setCoinortail] = useState([
+    {
+      id: 0,
+      value: 0,
+      label: "TAIL",
+    },
+    {
+      id: 1,
+      value: 1,
+      label: "COIN",
+    },
+  ]);
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
@@ -93,7 +118,6 @@ function App(props) {
   const localProvider = useStaticJsonRPC([
     process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
   ]);
-  console.log("🪲 ~ file: App.jsx:96 ~ App ~ localProvider", localProvider);
 
   const mainnetProvider = useStaticJsonRPC(providers, localProvider);
 
@@ -124,7 +148,40 @@ function App(props) {
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET);
   const userSigner = userProviderAndSigner.signer;
+  /**
+   * * PlayWager *
+   * ? this method is used to play the Cointoss game ?
+   * TODO Review how to use the methods from the ABI *
+   */
+  const PlayWager = async () => {
+    let bnbAddress = "";
+    let Coincontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["CoinToss"];
 
+    console.log("🪲 ~ file: Cointoss.js:147 ~ PlayWager ~ userProviderAndSigner", userProviderAndSigner);
+    let provider = new ethers.providers.Web3Provider(window.ethereum);
+    console.log("🪲 ~ file: App.jsx:144 ~ PlayWager ~ provider", provider);
+
+    let cointossContract = new ethers.Contract(Coincontract.address, Coincontract.abi, provider);
+    console.log("🪲 ~ file: App.jsx:148 ~ PlayWager ~ cointossContract", cointossContract);
+    let signer = provider.getSigner();
+    console.log("🪲 ~ file: App.jsx:150 ~ PlayWager ~ signer", signer);
+    let cointossContractWithSigner = cointossContract.connect(signer);
+    console.log("🪲 ~ file: App.jsx:152 ~ PlayWager ~ cointossContractWithSigner", cointossContractWithSigner);
+
+    let res = await cointossContractWithSigner
+      .wager(wagetInputs.face, wagetInputs.tokenAddress, wagetInputs.tokenAmount * 10 ** 18, {
+        value: wagetInputs.tokenAmount * 10 ** 18,
+        gasLimit: 2e7,
+      })
+      .then(response => {
+        console.log("🪲 ~ file: App.jsx:172 ~ PlayWager ~ response", response);
+        console.log("Success!");
+      })
+      .catch(error => {
+        console.log("Oh, no! We encountered an error: ", error);
+      });
+    console.log("🪲 ~ file: App.jsx:164 ~ PlayWager ~ res", res);
+  };
   useEffect(() => {
     async function getAddress() {
       if (userSigner) {
@@ -205,8 +262,8 @@ function App(props) {
       mainnetContracts
     ) {
       // console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
-      console.log("🌎 mainnetProvider", mainnetProvider);
-      console.log("🏠 localChainId", localChainId);
+      // console.log("🌎 mainnetProvider", mainnetProvider);
+      // console.log("🏠 localChainId", localChainId);
       // console.log("👩‍💼 selected address:", address);
       // console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
       // console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
@@ -311,7 +368,72 @@ function App(props) {
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
 
-      <Cointoss
+      <div style={{ margin: "auto", width: "70vw" }}>
+        <div
+          title={
+            <div style={{ fontSize: 24 }}>
+              {"Cointoss"}
+              <div style={{ float: "right" }}>
+                {/* <Address value={address} blockExplorer={blockExplorer} />
+              <Balance address={address} provider={provider} price={price} /> */}
+              </div>
+            </div>
+          }
+          size="large"
+          style={{ marginTop: 25, width: "100%" }}
+        ></div>
+        <div>
+          <h1>Wager</h1>
+          <Flex width="100%" alignItems="center">
+            <Stack spacing={3}>
+              <Select
+                placeholder="Select asset"
+                value={wagetInputs.tokenAddress}
+                onChange={e => {
+                  setWagertInputs({ ...wagetInputs, tokenAddress: e.target.value });
+                }}
+              >
+                {tokensaddress.map(op => {
+                  return <option value={op.value}>{op.label}</option>;
+                })}
+              </Select>
+
+              <Select
+                placeholder="Select Coin or Tail"
+                value={wagetInputs.face}
+                onChange={e => {
+                  setWagertInputs({ ...wagetInputs, face: e.target.value });
+                }}
+              >
+                {coinortail.map(op => {
+                  return <option value={op.value}>{op.label}</option>;
+                })}
+              </Select>
+            </Stack>
+            <Stack spacing={3}>
+              <Input
+                type="number"
+                placeholder="bet amount"
+                size="lg"
+                onChange={e => {
+                  setWagertInputs({ ...wagetInputs, tokenAmount: e.target.value });
+                }}
+              />
+              <Button colorScheme="teal" size="lg" onClick={PlayWager}>
+                {" "}
+                Play{" "}
+              </Button>
+            </Stack>
+            <Stack spacing={1}>
+              <Text>BET RESUME: </Text>
+              <Text>FACE: {wagetInputs.face} </Text>
+              <Text>Token: {wagetInputs.tokenAddress} </Text>
+              <Text>Token amount: {wagetInputs.tokenAmount} </Text>
+            </Stack>
+          </Flex>
+        </div>
+      </div>
+      {/* <Cointoss
         name="CoinToss"
         currentAccount={address}
         signer={userSigner}
@@ -322,7 +444,7 @@ function App(props) {
         contractConfig={contractConfig}
         targetNetwork={targetNetwork}
         userProviderAndSigner={userProviderAndSigner}
-      />
+      /> */}
       {/* <Contract
         name="CoinToss"
         price={price}
