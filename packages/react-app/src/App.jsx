@@ -11,7 +11,7 @@ import {
   useUserProviderAndSigner,
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 //import { useLocation } from "react-router-dom";
 import "./App.css";
 import {
@@ -84,6 +84,7 @@ function App(props) {
     tokenAddress: "",
     tokenAmount: 0,
   });
+  // eslint-disable-next-line
   const [tokensaddress, setTokensaddress] = useState([
     {
       id: 0,
@@ -91,6 +92,7 @@ function App(props) {
       label: "BNB",
     },
   ]);
+  // eslint-disable-next-line
   const [coinortail, setCoinortail] = useState([
     {
       id: 0,
@@ -154,7 +156,6 @@ function App(props) {
    * TODO Review how to use the methods from the ABI *
    */
   const PlayWager = async () => {
-    let bnbAddress = "";
     let Coincontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["CoinToss"];
 
     console.log("🪲 ~ file: Cointoss.js:147 ~ PlayWager ~ userProviderAndSigner", userProviderAndSigner);
