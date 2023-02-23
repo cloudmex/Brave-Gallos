@@ -52,17 +52,18 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * @param token - address :    *
    * @param tokenAmount - uint256 :    *
  */
-    const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
+  //   const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
 
-  const data = Promise.resolve(transaction)
-    data.then(value => {
+  // const data = Promise.resolve(transaction)
+  //   data.then(value => {
 
-          console.log(value)
+  //         console.log(value)
 
-      });
+  //     });
   
 
    let result = await Coin.getLastUserBets(deployer,1);
+   console.log("🪲 ~ file: 01_use_your_contract.js:66 ~ module.exports= ~ deployer:", deployer)
    console.log("🪲 ~ file: 01_use_your_contract.js:66 ~ module.exports= ~ result",typeof result ,result );
 
 
