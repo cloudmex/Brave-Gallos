@@ -5,7 +5,7 @@
       "chainId": "97",
       "contracts": {
         "Bank": {
-          "address": "0x0c3c4026a2D83965a5D0923332117A266Cbfb5c4",
+          "address": "0xF48a7416D114212B49629730b93048C460bE0dcC",
           "abi": [
             {
               "inputs": [
@@ -1472,7 +1472,7 @@
           ]
         },
         "CoinToss": {
-          "address": "0x67F4d234aDAe224Ca84b2d69FbF626787a4eF90b",
+          "address": "0x53b383408977375Bd4732D0eba6487a64c63593e",
           "abi": [
             {
               "inputs": [
@@ -1692,6 +1692,12 @@
                   "type": "uint256"
                 },
                 {
+                  "indexed": false,
+                  "internalType": "string",
+                  "name": "_idstr",
+                  "type": "string"
+                },
+                {
                   "indexed": true,
                   "internalType": "address",
                   "name": "user",
@@ -1762,6 +1768,12 @@
                   "indexed": false,
                   "internalType": "bool",
                   "name": "rolled",
+                  "type": "bool"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "haswon",
                   "type": "bool"
                 },
                 {
@@ -1879,6 +1891,11 @@
                   "type": "bool"
                 },
                 {
+                  "internalType": "bool",
+                  "name": "haswon",
+                  "type": "bool"
+                },
+                {
                   "internalType": "address",
                   "name": "user",
                   "type": "address"
@@ -1892,6 +1909,11 @@
                   "internalType": "uint256",
                   "name": "id",
                   "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "_idstr",
+                  "type": "string"
                 },
                 {
                   "internalType": "uint256",
@@ -1989,6 +2011,11 @@
                           "type": "bool"
                         },
                         {
+                          "internalType": "bool",
+                          "name": "haswon",
+                          "type": "bool"
+                        },
+                        {
                           "internalType": "address",
                           "name": "user",
                           "type": "address"
@@ -2002,6 +2029,11 @@
                           "internalType": "uint256",
                           "name": "id",
                           "type": "uint256"
+                        },
+                        {
+                          "internalType": "string",
+                          "name": "_idstr",
+                          "type": "string"
                         },
                         {
                           "internalType": "uint256",
@@ -2289,7 +2321,13 @@
                 }
               ],
               "name": "wager",
-              "outputs": [],
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "betID",
+                  "type": "uint256"
+                }
+              ],
               "stateMutability": "payable",
               "type": "function"
             },

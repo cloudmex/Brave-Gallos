@@ -8,7 +8,7 @@ import {Multicall} from "@openzeppelin/contracts/utils/Multicall.sol";
 import {Pausable} from "@openzeppelin/contracts/security/Pausable.sol";
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
+import "@openzeppelin/contracts/utils/Strings.sol";
 import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 /*import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";*/
@@ -59,9 +59,11 @@ abstract contract Game is
     /// @param vrfCost The Chainlink VRF cost paid by player.
     struct Bet {
         bool resolved;
+        bool haswon;
         address user;
         address token;
         uint256 id;
+        string  _idstr;
         uint256 amount;
         uint256 blockNumber;
         uint256 payout;
@@ -311,9 +313,11 @@ abstract contract Game is
         //console.log( "Bank:Storing the bet");
         Bet memory newBet = Bet(
             false,
+            false,
             user,
             tokenAddress,
             id,
+            Strings.toString(id),
             betAmount,
             block.number,
             0,
