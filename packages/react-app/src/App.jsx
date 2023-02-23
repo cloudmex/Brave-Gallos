@@ -34,7 +34,7 @@ import { getRPCPollTime, Web3ModalSetup } from "./helpers";
 // eslint-disable-next-line
 //import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
-
+import Swal from "sweetalert2";
 const { ethers } = require("ethers");
 
 /// 📡 What chain are your contracts deployed to?
@@ -63,6 +63,15 @@ function App(props) {
     face: "",
     tokenAddress: "",
     tokenAmount: 0,
+  });
+  const [Bankbalance, setBankbalance] = useState({
+    value: "0x00",
+    label: "BNB",
+    balance: 0,
+  });
+  const [bet_Info, setBet_Info] = useState({
+    resolve: "",
+    won: "",
   });
   // eslint-disable-next-line
   const [tokensaddress, setTokensaddress] = useState([
@@ -161,7 +170,61 @@ function App(props) {
       .catch(error => {
         console.log("Oh, no! We encountered an error: ", error);
       });
-    console.log("🪲 ~ file: App.jsx:164 ~ PlayWager ~ res", res);
+
+    console.log("🪲 ~ file: App.jsx:168 ~ result ~ Account:", address);
+
+    let result = await cointossContractWithSigner
+      .getLastUserBets(address, 1)
+      .then(response => {
+        console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response[0].bet);
+
+        setBet_Info({ ...bet_Info, resolve: response[0].bet?.resolved, won: response[0].bet?.haswon });
+        let tempbet = response[0].bet.haswon;
+        let temp = tempbet ? "You has won! " : "You has lose!";
+
+        Swal.fire({
+          icon: "Bet result",
+          title: temp,
+        });
+        GetBankBalance();
+
+        setTimeout(() => {
+          Swal.close();
+        }, 5000);
+        return;
+      })
+      .catch(error => {
+        console.log("Oh, no! We encountered an error: ", error);
+      });
+    console.log("🪲 ~ file: App.jsx:175 ~ result ~ result:", result);
+  };
+
+  const GetBankBalance = async () => {
+    console.clear();
+    // * recover the ABI from the JSON
+    let Bankcontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["Bank"];
+    // * Get the current provider
+    let provider = new ethers.providers.Web3Provider(window.ethereum);
+    // * Create a new instance of the contract from the ABI,address and the provider
+    let BankContract = new ethers.Contract(Bankcontract.address, Bankcontract.abi, provider);
+    // * get the current signer
+    let signer = provider.getSigner();
+    // * connect the contract and the signer
+    let BankContractWithSigner = BankContract.connect(signer);
+    // * use the instance connected with the signer to call the wager method.
+
+    console.log("🪲 ~ file: App.jsx:219 ~ GetBankBalance ~ BankContractWithSigner:", tokensaddress[0].value);
+
+    let result = await BankContractWithSigner.getBalance(tokensaddress[0].value)
+      .then(response => {
+        console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response, parseInt(response._hex, 16));
+
+        setBankbalance({ ...Bankbalance, balance: ethers.utils.formatEther(parseInt(response._hex, 16).toString()) });
+        return;
+      })
+      .catch(error => {
+        console.log("Oh, no! We encountered an error: ", error);
+      });
   };
   useEffect(() => {
     async function getAddress() {
@@ -253,19 +316,9 @@ function App(props) {
       // console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
       // console.log("🔐 writeContracts", writeContracts);
+      GetBankBalance();
     }
-  }, [
-    mainnetProvider,
-    address,
-    selectedChainId,
-    yourLocalBalance,
-    yourMainnetBalance,
-    readContracts,
-    writeContracts,
-    mainnetContracts,
-    localChainId,
-    myMainnetDAIBalance,
-  ]);
+  }, []);
 
   const loadWeb3Modal = useCallback(async () => {
     //const provider = await web3Modal.connect();
@@ -353,6 +406,10 @@ function App(props) {
         <div>
           <h1>Cointoss</h1>
           <h3>wager</h3>
+          <Flex spacing={3}>
+            <Text>Bank {Bankbalance.label} Balance: </Text>
+            <Text> {Bankbalance.balance} </Text>
+          </Flex>
           <Flex width="100%" alignItems="center">
             <Stack spacing={3}>
               <Select
@@ -396,7 +453,7 @@ function App(props) {
             <Stack spacing={1}>
               <Text>BET RESUME: </Text>
               <Text>FACE: {wagetInputs.face} </Text>
-              <Text>Token: {wagetInputs.tokenAddress} </Text>
+              <Text>Token: {wagetInputs.tokenAddress.substring(0, 5)} ... </Text>
               <Text>Token amount: {wagetInputs.tokenAmount} </Text>
             </Stack>
           </Flex>
