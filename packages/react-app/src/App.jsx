@@ -1,6 +1,6 @@
 //import { Button, Col, Menu, Row } from "antd";
 
-import { Button, Input, Stack, Flex, Text, Select } from "@chakra-ui/react";
+import { Button, Input, Stack, Flex, Text, Select, Container, Heading } from "@chakra-ui/react";
 import {
   useBalance,
   useContractLoader,
@@ -35,6 +35,8 @@ import { getRPCPollTime, Web3ModalSetup } from "./helpers";
 //import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
 import Swal from "sweetalert2";
+import cointoss_g from "./assets/coin.gif";
+
 const { ethers } = require("ethers");
 
 /// 📡 What chain are your contracts deployed to?
@@ -165,38 +167,48 @@ function App(props) {
       })
       .then(response => {
         console.log("🪲 ~ file: App.jsx:172 ~ PlayWager ~ response", response);
-        console.log("Success!");
+
+        Swal.fire({
+          background: "#0a0a0a",
+          position: "center",
+          imageUrl: "https://www.bravegallos.com/wp-content/uploads/2022/12/Sin-titulo-2.gif",
+          title: "Flipping the coin",
+          showConfirmButton: false,
+          timer: 3500,
+        });
+        setTimeout(async () => {
+          let result = await cointossContractWithSigner
+            .getLastUserBets(address, 1)
+            .then(response => {
+              console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response[0].bet);
+
+              setBet_Info({ ...bet_Info, resolve: response[0].bet?.resolved, won: response[0].bet?.haswon });
+              let tempbet = response[0].bet.haswon;
+              let temp = tempbet ? "You has won! " : "You has lose!";
+
+              Swal.fire({
+                icon: "Bet result",
+                title: temp,
+                background: "#0a0a0a",
+              });
+              GetBankBalance();
+
+              setTimeout(() => {
+                Swal.close();
+              }, 5000);
+              return;
+            })
+            .catch(error => {
+              console.log("Oh, no! We encountered an error: ", error);
+            });
+          console.log("🪲 ~ file: App.jsx:175 ~ result ~ result:", result);
+        }, 5000);
       })
       .catch(error => {
         console.log("Oh, no! We encountered an error: ", error);
       });
 
     console.log("🪲 ~ file: App.jsx:168 ~ result ~ Account:", address);
-
-    let result = await cointossContractWithSigner
-      .getLastUserBets(address, 1)
-      .then(response => {
-        console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response[0].bet);
-
-        setBet_Info({ ...bet_Info, resolve: response[0].bet?.resolved, won: response[0].bet?.haswon });
-        let tempbet = response[0].bet.haswon;
-        let temp = tempbet ? "You has won! " : "You has lose!";
-
-        Swal.fire({
-          icon: "Bet result",
-          title: temp,
-        });
-        GetBankBalance();
-
-        setTimeout(() => {
-          Swal.close();
-        }, 5000);
-        return;
-      })
-      .catch(error => {
-        console.log("Oh, no! We encountered an error: ", error);
-      });
-    console.log("🪲 ~ file: App.jsx:175 ~ result ~ result:", result);
   };
 
   const GetBankBalance = async () => {
@@ -359,7 +371,7 @@ function App(props) {
   // const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
 
   return (
-    <div className="App">
+    <div className="App" bg="tomato">
       {/* ✏️ Edit the header and change the title to your project name */}
       <Header>
         {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
@@ -401,63 +413,71 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
+      <div bg="tomato" width="100%">
+        <Container>
+          <div>
+            <Heading>Cointoss</Heading>
 
-      <div style={{ margin: "auto", width: "70vw" }}>
-        <div>
-          <h1>Cointoss</h1>
-          <h3>wager</h3>
-          <Flex spacing={3}>
-            <Text>Bank {Bankbalance.label} Balance: </Text>
-            <Text> {Bankbalance.balance} </Text>
-          </Flex>
-          <Flex width="100%" alignItems="center">
-            <Stack spacing={3}>
-              <Select
-                placeholder="Select asset"
-                value={wagetInputs.tokenAddress}
-                onChange={e => {
-                  setWagertInputs({ ...wagetInputs, tokenAddress: e.target.value });
-                }}
-              >
-                {tokensaddress.map(op => {
-                  return <option value={op.value}>{op.label}</option>;
-                })}
-              </Select>
+            <Flex spacing={3}>
+              <Text>Bank {Bankbalance.label} Balance: </Text>
+              <Text> {Bankbalance.balance} </Text>
+            </Flex>
+            <Flex width="100%" alignItems="center" gap={2}>
+              <Stack spacing={3}>
+                <Select
+                  height={16}
+                  width={60}
+                  placeholder="Select asset"
+                  value={wagetInputs.tokenAddress}
+                  onChange={e => {
+                    setWagertInputs({ ...wagetInputs, tokenAddress: e.target.value });
+                  }}
+                >
+                  {tokensaddress.map(op => {
+                    return <option value={op.value}>{op.label}</option>;
+                  })}
+                </Select>
 
-              <Select
-                placeholder="Select Coin or Tail"
-                value={wagetInputs.face}
-                onChange={e => {
-                  setWagertInputs({ ...wagetInputs, face: e.target.value });
-                }}
-              >
-                {coinortail.map(op => {
-                  return <option value={op.value}>{op.label}</option>;
-                })}
-              </Select>
-            </Stack>
-            <Stack spacing={3}>
-              <Input
-                type="number"
-                placeholder="bet amount"
-                size="lg"
-                onChange={e => {
-                  setWagertInputs({ ...wagetInputs, tokenAmount: e.target.value });
-                }}
-              />
-              <Button colorScheme="teal" size="lg" onClick={PlayWager}>
-                {" "}
-                Play{" "}
-              </Button>
-            </Stack>
-            <Stack spacing={1}>
-              <Text>BET RESUME: </Text>
-              <Text>FACE: {wagetInputs.face} </Text>
-              <Text>Token: {wagetInputs.tokenAddress.substring(0, 5)} ... </Text>
-              <Text>Token amount: {wagetInputs.tokenAmount} </Text>
-            </Stack>
-          </Flex>
-        </div>
+                <Select
+                  height={16}
+                  width={60}
+                  placeholder="Select Coin or Tail"
+                  value={wagetInputs.face}
+                  onChange={e => {
+                    setWagertInputs({ ...wagetInputs, face: e.target.value });
+                  }}
+                >
+                  {coinortail.map(op => {
+                    return <option value={op.value}>{op.label}</option>;
+                  })}
+                </Select>
+              </Stack>
+              <Stack spacing={3}>
+                <Input
+                  type="number"
+                  placeholder="bet amount"
+                  height={16}
+                  width={60}
+                  onChange={e => {
+                    setWagertInputs({ ...wagetInputs, tokenAmount: e.target.value });
+                  }}
+                />
+                <Button
+                  height={16}
+                  width={60}
+                  bgGradient="linear(to-r, teal.500, green.500)"
+                  _hover={{
+                    bgGradient: "linear(to-r, red.500, yellow.500)",
+                  }}
+                  onClick={PlayWager}
+                >
+                  {" "}
+                  Play{" "}
+                </Button>
+              </Stack>
+            </Flex>
+          </div>
+        </Container>
       </div>
     </div>
   );
