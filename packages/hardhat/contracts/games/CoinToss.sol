@@ -3,12 +3,17 @@
 pragma solidity 0.8.18;
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 import {Game} from "./Game.sol";
  
 /// @title BetSwirl's Coin Toss game
 /// @notice The game is played with a two-sided coin. The game's goal is to guess whether the lucky coin face will be Heads or Tails.
 /// @author Romuald Hog (based on Yakitori's Coin Toss)
 contract CoinToss is Game {
+
+    uint256[]  _randomWords ;
+
     /// @notice Full coin toss bet information struct.
     /// @param bet The Bet struct information.
     /// @param diceBet The Coin Toss bet struct information.
@@ -39,6 +44,7 @@ contract CoinToss is Game {
     /// @param face The chosen coin face.
     event PlaceBet(
         uint256 id,
+        string _idstr,
         address indexed user,
         address indexed token,
         uint256 amount,
@@ -61,6 +67,7 @@ contract CoinToss is Game {
         uint256 amount,
         bool face,
         bool rolled,
+        bool haswon,
         uint256 payout
     );
 
@@ -93,7 +100,7 @@ contract CoinToss is Game {
         bool face,
         address token,
         uint256 tokenAmount
-    ) external payable whenNotPaused {
+    ) external payable whenNotPaused  returns(uint256 betID){
          //console.log( "Cointoss: Placing a new bet");
 
         Bet memory bet = _newBet(token, tokenAmount, _getPayout(10000));
@@ -102,16 +109,23 @@ contract CoinToss is Game {
         coinTossBets[bet.id].face = face;
        //console.log( "Cointoss: Placing set the face value");
 
-       //console.log( "Cointoss: Emited the bet");
+       console.log( "Cointoss: Emited the bet",bet.id);
 
         emit PlaceBet(
             bet.id,
+            Strings.toString(bet.id),
             bet.user,
             bet.token,
             bet.amount,
             bet.vrfCost,
             face
         );
+        
+        _randomWords.push(bet.id);
+        fulfillRandomWords(bet.id,_randomWords);
+        return bet.id;
+
+        
     }
 
     /// @notice Resolves the bet using the Chainlink randomness.
@@ -132,10 +146,10 @@ contract CoinToss is Game {
         bool[2] memory coinSides = [false, true];
         bool rolledCoinSide = coinSides[rolled];
         coinTossBet.rolled = rolledCoinSide;
+        bet.haswon= rolledCoinSide == coinTossBet.face ? true :false;
         uint256 payout = _resolveBet(
             bet,
-            rolledCoinSide == coinTossBet.face ?
-                _getPayout(bet.amount) : 0
+            bet.haswon ? _getPayout(bet.amount) : 0
         );
 
         emit Roll(
@@ -145,6 +159,7 @@ contract CoinToss is Game {
             bet.amount,
             coinTossBet.face,
             rolledCoinSide,
+            bet.haswon,
             payout
         );
 

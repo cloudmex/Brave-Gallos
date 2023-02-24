@@ -1,7 +1,6 @@
 //import { Button, Col, Menu, Row } from "antd";
 
 import { Button, Input, Stack, Flex, Text, Select } from "@chakra-ui/react";
-import "antd/dist/antd.css";
 import {
   useBalance,
   useContractLoader,
@@ -12,8 +11,7 @@ import {
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import React, { useCallback, useEffect, useState } from "react";
-//import { useLocation } from "react-router-dom";
-import "./App.css";
+
 import {
   Account,
   // Contract,
@@ -23,7 +21,7 @@ import {
   // Ramp,
   ThemeSwitch,
   NetworkDisplay,
-  FaucetHint,
+  //FaucetHint,
   NetworkSwitch,
   // Contract,
 } from "./components";
@@ -36,26 +34,8 @@ import { getRPCPollTime, Web3ModalSetup } from "./helpers";
 // eslint-disable-next-line
 //import Cointoss from "./views/Cointoss";
 import { useStaticJsonRPC } from "./hooks";
-
+import Swal from "sweetalert2";
 const { ethers } = require("ethers");
-/*
-    Welcome to 🏗 scaffold-eth !
-
-    Code:
-    https://github.com/scaffold-eth/scaffold-eth
-
-    Support:
-    https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA
-    or DM @austingriffith on twitter or telegram
-
-    You should get your own Alchemy.com & Infura.io ID and put it in `constants.js`
-    (this is your connection to the main Ethereum network for ENS etc.)
-
-
-    🌏 EXTERNAL CONTRACTS:
-    You can also bring in contract artifacts in `constants.js`
-    (and then use the `useExternalContractLoader()` hook!)
-*/
 
 /// 📡 What chain are your contracts deployed to?
 const initialNetwork = NETWORKS.binanceTestnet; // <------- select your target frontend network (localhost, goerli, xdai, mainnet)
@@ -83,6 +63,15 @@ function App(props) {
     face: "",
     tokenAddress: "",
     tokenAmount: 0,
+  });
+  const [Bankbalance, setBankbalance] = useState({
+    value: "0x00",
+    label: "BNB",
+    balance: 0,
+  });
+  const [bet_Info, setBet_Info] = useState({
+    resolve: "",
+    won: "",
   });
   // eslint-disable-next-line
   const [tokensaddress, setTokensaddress] = useState([
@@ -144,31 +133,31 @@ function App(props) {
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider, mainnetProviderPollingTime);
-
-  /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
-  //const gasPrice = useGasPrice(targetNetwork, "fast", localProviderPollingTime);
-  // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET);
   const userSigner = userProviderAndSigner.signer;
+
   /**
    * * PlayWager *
    * ? this method is used to play the Cointoss game ?
    * TODO Review how to use the methods from the ABI *
    */
   const PlayWager = async () => {
+    // * recover the ABI from the JSON
     let Coincontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["CoinToss"];
-
-    console.log("🪲 ~ file: Cointoss.js:147 ~ PlayWager ~ userProviderAndSigner", userProviderAndSigner);
+    // * Get the current provider
     let provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log("🪲 ~ file: App.jsx:144 ~ PlayWager ~ provider", provider);
-
+    // * Create a new instance of the contract from the ABI,address and the provider
     let cointossContract = new ethers.Contract(Coincontract.address, Coincontract.abi, provider);
-    console.log("🪲 ~ file: App.jsx:148 ~ PlayWager ~ cointossContract", cointossContract);
+    // * get the current signer
     let signer = provider.getSigner();
-    console.log("🪲 ~ file: App.jsx:150 ~ PlayWager ~ signer", signer);
+    // * connect the contract and the signer
     let cointossContractWithSigner = cointossContract.connect(signer);
-    console.log("🪲 ~ file: App.jsx:152 ~ PlayWager ~ cointossContractWithSigner", cointossContractWithSigner);
-
+    // * use the instance connected with the signer to call the wager method.
+    /**
+     * @param wagetInputs.face : is the value for coin(1) or tail(0)
+     * @param wagetInputs.tokenAddress : is the token's address
+     * @param wagetInputs.tokenAmount: is the amount for the bet
+     * */
     let res = await cointossContractWithSigner
       .wager(wagetInputs.face, wagetInputs.tokenAddress, wagetInputs.tokenAmount * 10 ** 18, {
         value: wagetInputs.tokenAmount * 10 ** 18,
@@ -181,7 +170,61 @@ function App(props) {
       .catch(error => {
         console.log("Oh, no! We encountered an error: ", error);
       });
-    console.log("🪲 ~ file: App.jsx:164 ~ PlayWager ~ res", res);
+
+    console.log("🪲 ~ file: App.jsx:168 ~ result ~ Account:", address);
+
+    let result = await cointossContractWithSigner
+      .getLastUserBets(address, 1)
+      .then(response => {
+        console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response[0].bet);
+
+        setBet_Info({ ...bet_Info, resolve: response[0].bet?.resolved, won: response[0].bet?.haswon });
+        let tempbet = response[0].bet.haswon;
+        let temp = tempbet ? "You has won! " : "You has lose!";
+
+        Swal.fire({
+          icon: "Bet result",
+          title: temp,
+        });
+        GetBankBalance();
+
+        setTimeout(() => {
+          Swal.close();
+        }, 5000);
+        return;
+      })
+      .catch(error => {
+        console.log("Oh, no! We encountered an error: ", error);
+      });
+    console.log("🪲 ~ file: App.jsx:175 ~ result ~ result:", result);
+  };
+
+  const GetBankBalance = async () => {
+    console.clear();
+    // * recover the ABI from the JSON
+    let Bankcontract = contractConfig.deployedContracts[selectedChainId].bnbTestnet.contracts["Bank"];
+    // * Get the current provider
+    let provider = new ethers.providers.Web3Provider(window.ethereum);
+    // * Create a new instance of the contract from the ABI,address and the provider
+    let BankContract = new ethers.Contract(Bankcontract.address, Bankcontract.abi, provider);
+    // * get the current signer
+    let signer = provider.getSigner();
+    // * connect the contract and the signer
+    let BankContractWithSigner = BankContract.connect(signer);
+    // * use the instance connected with the signer to call the wager method.
+
+    console.log("🪲 ~ file: App.jsx:219 ~ GetBankBalance ~ BankContractWithSigner:", tokensaddress[0].value);
+
+    let result = await BankContractWithSigner.getBalance(tokensaddress[0].value)
+      .then(response => {
+        console.log("🪲 ~ file: App.jsx:168 ~ result ~ response:", response, parseInt(response._hex, 16));
+
+        setBankbalance({ ...Bankbalance, balance: ethers.utils.formatEther(parseInt(response._hex, 16).toString()) });
+        return;
+      })
+      .catch(error => {
+        console.log("Oh, no! We encountered an error: ", error);
+      });
   };
   useEffect(() => {
     async function getAddress() {
@@ -273,19 +316,9 @@ function App(props) {
       // console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
       // console.log("🔐 writeContracts", writeContracts);
+      GetBankBalance();
     }
-  }, [
-    mainnetProvider,
-    address,
-    selectedChainId,
-    yourLocalBalance,
-    yourMainnetBalance,
-    readContracts,
-    writeContracts,
-    mainnetContracts,
-    localChainId,
-    myMainnetDAIBalance,
-  ]);
+  }, []);
 
   const loadWeb3Modal = useCallback(async () => {
     //const provider = await web3Modal.connect();
@@ -357,9 +390,9 @@ function App(props) {
           <ThemeSwitch />
         </div>
       </Header>
-      {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
+      {/* {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
         <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-      )}
+      )}   */}
       <NetworkDisplay
         NETWORKCHECK={NETWORKCHECK}
         localChainId={localChainId}
@@ -370,21 +403,13 @@ function App(props) {
       />
 
       <div style={{ margin: "auto", width: "70vw" }}>
-        <div
-          title={
-            <div style={{ fontSize: 24 }}>
-              {"Cointoss"}
-              <div style={{ float: "right" }}>
-                {/* <Address value={address} blockExplorer={blockExplorer} />
-              <Balance address={address} provider={provider} price={price} /> */}
-              </div>
-            </div>
-          }
-          size="large"
-          style={{ marginTop: 25, width: "100%" }}
-        ></div>
         <div>
-          <h1>Wager</h1>
+          <h1>Cointoss</h1>
+          <h3>wager</h3>
+          <Flex spacing={3}>
+            <Text>Bank {Bankbalance.label} Balance: </Text>
+            <Text> {Bankbalance.balance} </Text>
+          </Flex>
           <Flex width="100%" alignItems="center">
             <Stack spacing={3}>
               <Select
@@ -428,211 +453,12 @@ function App(props) {
             <Stack spacing={1}>
               <Text>BET RESUME: </Text>
               <Text>FACE: {wagetInputs.face} </Text>
-              <Text>Token: {wagetInputs.tokenAddress} </Text>
+              <Text>Token: {wagetInputs.tokenAddress.substring(0, 5)} ... </Text>
               <Text>Token amount: {wagetInputs.tokenAmount} </Text>
             </Stack>
           </Flex>
         </div>
       </div>
-      {/* <Cointoss
-        name="CoinToss"
-        currentAccount={address}
-        signer={userSigner}
-        selectedChainId={selectedChainId}
-        provider={localProvider}
-        userAddress={address}
-        blockExplorer={blockExplorer}
-        contractConfig={contractConfig}
-        targetNetwork={targetNetwork}
-        userProviderAndSigner={userProviderAndSigner}
-      /> */}
-      {/* <Contract
-        name="CoinToss"
-        price={price}
-        signer={userSigner}
-        provider={localProvider}
-        address={address}
-        blockExplorer={blockExplorer}
-        contractConfig={contractConfig}
-      /> */}
-      {/*  <Menu style={{ textAlign: "center", marginTop: 20 }} selectedKeys={[location.pathname]} mode="horizontal">
-        <Menu.Item key="/">
-          <Link to="/">App Homea</Link>
-        </Menu.Item>
-        <Menu.Item key="/debug">
-          <Link to="/debug">Debug Test Contracts</Link>
-        </Menu.Item>
-        <Menu.Item key="/cointoss">
-          <Link to="/cointoss">Debug Cointoss Contract</Link>
-        </Menu.Item>
-        <Menu.Item key="/bank">
-          <Link to="/bank">Debug Bank Contract</Link>
-        </Menu.Item>
-        <Menu.Item key="/braveToken">
-          <Link to="/braveToken">Debug BG Token Contract</Link>
-        </Menu.Item>
-        <Menu.Item key="/hints">
-          <Link to="/hints">Hints</Link>
-        </Menu.Item>
-        <Menu.Item key="/exampleui">
-          <Link to="/exampleui">ExampleUI</Link>
-        </Menu.Item>
-        <Menu.Item key="/mainnetdai">
-          <Link to="/mainnetdai">Mainnet DAI</Link>
-        </Menu.Item>
-        <Menu.Item key="/subgraph">
-          <Link to="/subgraph">Subgraph</Link>
-        </Menu.Item>
-      </Menu>
-
-      <Switch>
-        <Route exact path="/">
-          //pass in any web3 props to this Home component. For example, yourLocalBalance  
-          <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
-        </Route>
-        <Route exact path="/debug">
-           
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-             
-
-          <Contract
-            name="YourContract"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
-
-        <Route exact path="/cointoss">
-          
-
-          <Contract
-            name="CoinToss"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
-        <Route exact path="/bank">
-          
-
-          <Contract
-            name="Bank"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
-        <Route exact path="/braveToken">
-           
-
-          <Contract
-            name="BraveGallosToken"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
-        <Route path="/hints">
-          <Hints
-            address={address}
-            yourLocalBalance={yourLocalBalance}
-            mainnetProvider={mainnetProvider}
-            price={price}
-          />
-        </Route>
-        <Route path="/exampleui">
-          <ExampleUI
-            address={address}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            purpose={purpose}
-          />
-        </Route>
-        <Route path="/mainnetdai">
-          <Contract
-            name="DAI"
-            customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
-            signer={userSigner}
-            provider={mainnetProvider}
-            address={address}
-            blockExplorer="https://etherscan.io/"
-            contractConfig={contractConfig}
-            chainId={1}
-          />
-         
-        </Route>
-        <Route path="/subgraph">
-          <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
-          />
-        </Route>
-      </Switch>
-
-     
-
-       🗺 Extra UI like gas price, eth price, faucet, and support: 
-      <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
-
-          <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-            <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-            <Button
-              onClick={() => {
-                window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
-              }}
-              size="large"
-              shape="round"
-            >
-              <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                💬
-              </span>
-              Support
-            </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              //  if the local provider has a signer, let's show the faucet:   
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ""
-              )
-            }
-          </Col>
-        </Row>
-      </div>*/}
     </div>
   );
 }

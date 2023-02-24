@@ -20,6 +20,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   let subscription_id=2166;
   let Bank=null;
 
+
+  console.log("01")
    /**
    * * 1- Recover the bank address deployed *
    * TODO This is used to interact with the contract with JS *
@@ -50,15 +52,46 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    * @param token - address :    *
    * @param tokenAmount - uint256 :    *
  */
- //  const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
+  //   const transaction =await Coin.wager(1,bnbAddress,BigInt(1000000000000000),{  value:BigInt(1000000000000000),gasLimit: 3e7})
 
   // const data = Promise.resolve(transaction)
   //   data.then(value => {
 
-  //         //console.log(value)
+  //         console.log(value)
 
   //     });
   
+
+   let result = await Coin.getLastUserBets(deployer,1);
+   console.log("🪲 ~ file: 01_use_your_contract.js:66 ~ module.exports= ~ deployer:", deployer)
+   console.log("🪲 ~ file: 01_use_your_contract.js:66 ~ module.exports= ~ result",typeof result ,result );
+
+
+   let  tx = result[0].bet;
+
+    console.log("🪲 ~ file: 01_use_your_contract.js:70 ~ module.exports= ~ tx", typeof tx,
+    {idhex:tx.id._hex,idstr:tx._idstr})
+
+
+
+
+    
+    
+  //    let fulfillRandomWords_RES = Coin.fulfillRandomWords(tx._idstr,[tx._idstr])
+  //    console.log("🪲 ~ file: 01_use_your_contract.js:76 ~ module.exports= ~ fulfillRandomWords_RES", fulfillRandomWords_RES)
+  //   // let result2 = await Coin.bets(tx._idstr)   ;
+  //   // console.log("🪲 ~ file: 01_use_your_contract.js:75 ~ module.exports= ~ result2", result2)
+
+
+
+
+
+  //  const data2 = Promise.resolve(result)
+  //   data2.then(value => {
+
+  //         console.log(value)
+
+  //     });
   /*
   //If you want to send value to an address from the deployer
   const deployerWallet = ethers.provider.getSigner()
