@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography } from "antd";
+import bg_logo from "../assets/bravegalloslogo.webp";
 
 const { Title, Text } = Typography;
 
@@ -10,9 +11,9 @@ export default function Header({ link, title, subTitle, ...props }) {
     <div style={{ display: "flex", justifyContent: "space-between", padding: "1.2rem" }}>
       <div style={{ display: "flex", flexDirection: "column", flex: 1, alignItems: "start" }}>
         <a href={link} target="_blank" rel="noopener noreferrer">
-          <Title level={4} style={{ margin: "0 0.5rem 0 0" }}>
-            {title}
-          </Title>
+          <div>
+            <img width={200} src={bg_logo} alt="brave logo" />
+          </div>
         </a>
         <Text type="secondary" style={{ textAlign: "left" }}>
           {subTitle}
