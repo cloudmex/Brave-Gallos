@@ -93,7 +93,7 @@ function App(props) {
     {
       id: 1,
       value: 1,
-      label: "COIN",
+      label: "HEAT",
     },
   ]);
 
